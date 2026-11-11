@@ -1,0 +1,33 @@
+GroupAggregate  (cost=4045.05..4057.44 rows=250 width=44) (actual time=0.268..0.353 rows=25 loops=1)
+  Group Key: e.id, cv.lesson_count
+  Buffers: shared hit=219
+  ->  Sort  (cost=4045.05..4046.59 rows=614 width=20) (actual time=0.263..0.290 rows=928 loops=1)
+        Sort Key: e.id, cv.lesson_count
+        Sort Method: quicksort  Memory: 68kB
+        Buffers: shared hit=219
+        ->  Nested Loop Left Join  (cost=5.61..4016.62 rows=614 width=20) (actual time=0.015..0.197 rows=928 loops=1)
+              Buffers: shared hit=219
+              ->  Nested Loop  (cost=5.18..110.10 rows=25 width=12) (actual time=0.013..0.025 rows=25 loops=1)
+                    Buffers: shared hit=34
+                    ->  Nested Loop  (cost=0.57..16.60 rows=1 width=12) (actual time=0.009..0.009 rows=1 loops=1)
+                          Buffers: shared hit=6
+                          ->  Index Scan using cohorts_pkey on cohorts h  (cost=0.28..8.30 rows=1 width=16) (actual time=0.002..0.002 rows=1 loops=1)
+                                Index Cond: (id = '48'::smallint)
+                                Buffers: shared hit=3
+                          ->  Index Scan using course_versions_pkey on course_versions cv  (cost=0.29..8.30 rows=1 width=12) (actual time=0.006..0.006 rows=1 loops=1)
+                                Index Cond: (id = h.course_version_id)
+                                Buffers: shared hit=3
+                    ->  Bitmap Heap Scan on enrollments e  (cost=4.61..93.24 rows=25 width=16) (actual time=0.004..0.013 rows=25 loops=1)
+                          Recheck Cond: (cohort_id = '48'::smallint)
+                          Heap Blocks: exact=25
+                          Buffers: shared hit=28
+                          ->  Bitmap Index Scan on enrollments_cohort_id_student_id_key  (cost=0.00..4.61 rows=25 width=0) (actual time=0.002..0.002 rows=25 loops=1)
+                                Index Cond: (cohort_id = '48'::smallint)
+                                Buffers: shared hit=3
+              ->  Index Scan using lesson_progress_enrollment_id_lesson_id_key on lesson_progress lp  (cost=0.43..155.81 rows=45 width=16) (actual time=0.002..0.005 rows=37 loops=25)
+                    Index Cond: (enrollment_id = e.id)
+                    Buffers: shared hit=185
+Planning:
+  Buffers: shared hit=25
+Planning Time: 0.128 ms
+Execution Time: 0.365 ms

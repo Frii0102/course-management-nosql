@@ -1,0 +1,143 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "lms_bench.course_versions",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$and": [
+        {
+          "courseId": {
+            "$eq": 1
+          }
+        },
+        {
+          "version": {
+            "$eq": 2
+          }
+        }
+      ]
+    },
+    "queryHash": "C17653EE",
+    "planCacheKey": "340C3748",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "courseId": 1,
+          "version": 1
+        },
+        "indexName": "uq_course_version",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "courseId": [],
+          "version": []
+        },
+        "isUnique": true,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "courseId": [
+            "[1, 1]"
+          ],
+          "version": [
+            "[2, 2]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 1,
+    "executionTimeMillis": 0,
+    "totalKeysExamined": 1,
+    "totalDocsExamined": 1,
+    "executionStages": {
+      "stage": "FETCH",
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 0,
+      "works": 2,
+      "advanced": 1,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "docsExamined": 1,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 1,
+        "executionTimeMillisEstimate": 0,
+        "works": 2,
+        "advanced": 1,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "keyPattern": {
+          "courseId": 1,
+          "version": 1
+        },
+        "indexName": "uq_course_version",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "courseId": [],
+          "version": []
+        },
+        "isUnique": true,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "courseId": [
+            "[1, 1]"
+          ],
+          "version": [
+            "[2, 2]"
+          ]
+        },
+        "keysExamined": 1,
+        "seeks": 1,
+        "dupsTested": 0,
+        "dupsDropped": 0
+      }
+    }
+  },
+  "command": {
+    "find": "course_versions",
+    "filter": {
+      "courseId": 1,
+      "version": 2
+    },
+    "$db": "lms_bench"
+  },
+  "serverInfo": {
+    "host": "48a870165293",
+    "port": 27017,
+    "version": "7.0.45",
+    "gitVersion": "a52313e13ab55c9bddf7c3ff91dab286fa381796"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "ok": 1.0
+}

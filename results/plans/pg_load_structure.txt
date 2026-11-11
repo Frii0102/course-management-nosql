@@ -1,0 +1,27 @@
+Incremental Sort  (cost=53.58..210.36 rows=82 width=532) (actual time=0.217..0.267 rows=76 loops=1)
+  Sort Key: mv."position", lv."position", mt.id
+  Presorted Key: mv."position"
+  Full-sort Groups: 2  Sort Method: quicksort  Average Memory: 46kB  Peak Memory: 46kB
+  Buffers: shared hit=328
+  ->  Nested Loop Left Join  (cost=1.69..207.47 rows=82 width=532) (actual time=0.092..0.201 rows=76 loops=1)
+        Buffers: shared hit=328
+        ->  Nested Loop Left Join  (cost=1.26..183.01 rows=41 width=486) (actual time=0.060..0.105 rows=38 loops=1)
+              Buffers: shared hit=156
+              ->  Nested Loop  (cost=0.84..163.97 rows=41 width=445) (actual time=0.043..0.060 rows=38 loops=1)
+                    Buffers: shared hit=30
+                    ->  Index Scan using module_versions_course_version_id_position_key on module_versions mv  (cost=0.42..17.27 rows=6 width=29) (actual time=0.023..0.024 rows=6 loops=1)
+                          Index Cond: (course_version_id = '5118'::smallint)
+                          Buffers: shared hit=4
+                    ->  Index Scan using lesson_versions_module_version_id_position_key on lesson_versions lv  (cost=0.42..24.35 rows=10 width=432) (actual time=0.004..0.005 rows=6 loops=6)
+                          Index Cond: (module_version_id = mv.id)
+                          Buffers: shared hit=26
+              ->  Index Scan using ix_assignment_versions_lesson on assignment_versions av  (cost=0.42..0.45 rows=1 width=49) (actual time=0.001..0.001 rows=0 loops=38)
+                    Index Cond: (lesson_version_id = lv.id)
+                    Buffers: shared hit=126
+        ->  Index Scan using ix_material_versions_lesson on material_versions mt  (cost=0.43..0.58 rows=2 width=62) (actual time=0.002..0.002 rows=2 loops=38)
+              Index Cond: (lesson_version_id = lv.id)
+              Buffers: shared hit=172
+Planning:
+  Buffers: shared hit=251
+Planning Time: 1.386 ms
+Execution Time: 0.329 ms

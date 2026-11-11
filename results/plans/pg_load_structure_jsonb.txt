@@ -1,0 +1,34 @@
+Index Only Scan using course_versions_pkey on course_versions cv  (cost=0.29..1188.50 rows=1 width=32) (actual time=0.860..0.862 rows=1 loops=1)
+  Index Cond: (id = '5118'::smallint)
+  Heap Fetches: 0
+  Buffers: shared hit=331
+  SubPlan 4
+    ->  Aggregate  (cost=1180.18..1180.19 rows=1 width=32) (actual time=0.788..0.789 rows=1 loops=1)
+          Buffers: shared hit=328
+          ->  Index Scan using module_versions_course_version_id_position_key on module_versions mv  (cost=0.42..17.27 rows=6 width=29) (actual time=0.006..0.008 rows=6 loops=1)
+                Index Cond: (course_version_id = cv.id)
+                Buffers: shared hit=4
+          SubPlan 3
+            ->  Aggregate  (cost=193.80..193.81 rows=1 width=32) (actual time=0.090..0.090 rows=1 loops=6)
+                  Buffers: shared hit=324
+                  ->  Index Scan using lesson_versions_module_version_id_position_key on lesson_versions lv  (cost=0.42..24.35 rows=10 width=424) (actual time=0.002..0.003 rows=6 loops=6)
+                        Index Cond: (module_version_id = mv.id)
+                        Buffers: shared hit=26
+                  SubPlan 1
+                    ->  Aggregate  (cost=8.49..8.50 rows=1 width=32) (actual time=0.006..0.006 rows=1 loops=38)
+                          Buffers: shared hit=172
+                          ->  Sort  (cost=8.47..8.48 rows=2 width=54) (actual time=0.002..0.002 rows=2 loops=38)
+                                Sort Key: mt.id
+                                Sort Method: quicksort  Memory: 25kB
+                                Buffers: shared hit=172
+                                ->  Index Scan using ix_material_versions_lesson on material_versions mt  (cost=0.43..8.46 rows=2 width=54) (actual time=0.001..0.001 rows=2 loops=38)
+                                      Index Cond: (lesson_version_id = lv.id)
+                                      Buffers: shared hit=172
+                  SubPlan 2
+                    ->  Limit  (cost=0.42..8.44 rows=1 width=32) (actual time=0.001..0.001 rows=0 loops=38)
+                          Buffers: shared hit=126
+                          ->  Index Scan using ix_assignment_versions_lesson on assignment_versions av  (cost=0.42..8.44 rows=1 width=32) (actual time=0.001..0.001 rows=0 loops=38)
+                                Index Cond: (lesson_version_id = lv.id)
+                                Buffers: shared hit=126
+Planning Time: 0.072 ms
+Execution Time: 0.879 ms

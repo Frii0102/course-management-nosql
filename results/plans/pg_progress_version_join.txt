@@ -1,0 +1,41 @@
+GroupAggregate  (cost=4086.34..4093.11 rows=25 width=48) (actual time=0.373..0.456 rows=25 loops=1)
+  Group Key: e.id, (count(*))
+  Buffers: shared hit=239
+  ->  Sort  (cost=4086.34..4087.88 rows=614 width=24) (actual time=0.368..0.394 rows=928 loops=1)
+        Sort Key: e.id, (count(*))
+        Sort Method: quicksort  Memory: 68kB
+        Buffers: shared hit=239
+        ->  Nested Loop Left Join  (cost=54.90..4057.91 rows=614 width=24) (actual time=0.076..0.291 rows=928 loops=1)
+              Buffers: shared hit=239
+              ->  Nested Loop  (cost=54.47..151.39 rows=25 width=16) (actual time=0.073..0.086 rows=25 loops=1)
+                    Buffers: shared hit=54
+                    ->  Nested Loop  (cost=49.86..57.89 rows=1 width=16) (actual time=0.067..0.068 rows=1 loops=1)
+                          Buffers: shared hit=26
+                          ->  Index Scan using cohorts_pkey on cohorts h  (cost=0.28..8.30 rows=1 width=16) (actual time=0.001..0.002 rows=1 loops=1)
+                                Index Cond: (id = '48'::smallint)
+                                Buffers: shared hit=3
+                          ->  Aggregate  (cost=49.58..49.59 rows=1 width=8) (actual time=0.065..0.066 rows=1 loops=1)
+                                Buffers: shared hit=23
+                                ->  Nested Loop  (cost=0.84..49.47 rows=41 width=0) (actual time=0.054..0.064 rows=44 loops=1)
+                                      Buffers: shared hit=23
+                                      ->  Index Scan using module_versions_course_version_id_position_key on module_versions mv  (cost=0.42..17.27 rows=6 width=8) (actual time=0.041..0.042 rows=6 loops=1)
+                                            Index Cond: (course_version_id = h.course_version_id)
+                                            Buffers: shared hit=4
+                                      ->  Index Only Scan using lesson_versions_module_version_id_position_key on lesson_versions lv  (cost=0.42..5.27 rows=10 width=8) (actual time=0.003..0.003 rows=7 loops=6)
+                                            Index Cond: (module_version_id = mv.id)
+                                            Heap Fetches: 0
+                                            Buffers: shared hit=19
+                    ->  Bitmap Heap Scan on enrollments e  (cost=4.61..93.24 rows=25 width=16) (actual time=0.004..0.014 rows=25 loops=1)
+                          Recheck Cond: (cohort_id = '48'::smallint)
+                          Heap Blocks: exact=25
+                          Buffers: shared hit=28
+                          ->  Bitmap Index Scan on enrollments_cohort_id_student_id_key  (cost=0.00..4.61 rows=25 width=0) (actual time=0.002..0.002 rows=25 loops=1)
+                                Index Cond: (cohort_id = '48'::smallint)
+                                Buffers: shared hit=3
+              ->  Index Scan using lesson_progress_enrollment_id_lesson_id_key on lesson_progress lp  (cost=0.43..155.81 rows=45 width=16) (actual time=0.002..0.006 rows=37 loops=25)
+                    Index Cond: (enrollment_id = e.id)
+                    Buffers: shared hit=185
+Planning:
+  Buffers: shared hit=70
+Planning Time: 0.163 ms
+Execution Time: 0.468 ms

@@ -1,0 +1,32 @@
+Sort  (cost=329.73..329.83 rows=41 width=40) (actual time=0.233..0.234 rows=2 loops=1)
+  Sort Key: (COALESCE(lv.source_lesson_id, lv_1.source_lesson_id))
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=61
+  ->  Hash Full Join  (cost=165.33..328.63 rows=41 width=40) (actual time=0.204..0.233 rows=2 loops=1)
+        Hash Cond: (lv.source_lesson_id = lv_1.source_lesson_id)
+        Filter: ((lv.source_lesson_id IS NULL) OR (lv_1.source_lesson_id IS NULL) OR (mv.source_module_id IS DISTINCT FROM mv_1.source_module_id) OR ((lv.title)::text IS DISTINCT FROM (lv_1.title)::text) OR (lv.content IS DISTINCT FROM lv_1.content) OR (lv.duration_minutes IS DISTINCT FROM lv_1.duration_minutes) OR (lv."position" IS DISTINCT FROM lv_1."position"))
+        Rows Removed by Filter: 37
+        Buffers: shared hit=61
+        ->  Nested Loop  (cost=0.84..163.97 rows=41 width=424) (actual time=0.028..0.071 rows=38 loops=1)
+              Buffers: shared hit=29
+              ->  Index Scan using module_versions_course_version_id_position_key on module_versions mv  (cost=0.42..17.27 rows=6 width=16) (actual time=0.015..0.015 rows=6 loops=1)
+                    Index Cond: (course_version_id = '5097'::smallint)
+                    Buffers: shared hit=4
+              ->  Index Scan using lesson_versions_module_version_id_position_key on lesson_versions lv  (cost=0.42..24.35 rows=10 width=424) (actual time=0.006..0.008 rows=6 loops=6)
+                    Index Cond: (module_version_id = mv.id)
+                    Buffers: shared hit=25
+        ->  Hash  (cost=163.97..163.97 rows=41 width=424) (actual time=0.143..0.143 rows=39 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 26kB
+              Buffers: shared hit=32
+              ->  Nested Loop  (cost=0.84..163.97 rows=41 width=424) (actual time=0.090..0.131 rows=39 loops=1)
+                    Buffers: shared hit=32
+                    ->  Index Scan using module_versions_course_version_id_position_key on module_versions mv_1  (cost=0.42..17.27 rows=6 width=16) (actual time=0.047..0.048 rows=6 loops=1)
+                          Index Cond: (course_version_id = '7097'::smallint)
+                          Buffers: shared hit=4
+                    ->  Index Scan using lesson_versions_module_version_id_position_key on lesson_versions lv_1  (cost=0.42..24.35 rows=10 width=424) (actual time=0.009..0.013 rows=6 loops=6)
+                          Index Cond: (module_version_id = mv_1.id)
+                          Buffers: shared hit=28
+Planning:
+  Buffers: shared hit=152
+Planning Time: 0.270 ms
+Execution Time: 0.249 ms

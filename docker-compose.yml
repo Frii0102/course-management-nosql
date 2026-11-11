@@ -1,0 +1,53 @@
+name: course-nosql-lab
+# Однакові ліміти ресурсів (2 CPU, 3 ГБ) і розмір кешу (1 ГБ) для PostgreSQL та MongoDB,
+# щоб порівняння швидкодії було чесним (зафіксуй це в README).
+# Neo4j піднімається окремо, ПІСЛЯ бенчмарка, щоб не конкурувати за ресурси VM.
+# Docker Desktop: виділи ≥ 8 ГБ RAM (Settings → Resources).
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lms
+    ports:
+      - "127.0.0.1:55432:5432"
+    cpus: 2
+    mem_limit: 3g
+    shm_size: 1g
+    command: >
+      postgres
+      -c shared_buffers=1GB
+      -c effective_cache_size=2GB
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql:/sql:ro
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "127.0.0.1:57017:27017"
+    cpus: 2
+    mem_limit: 3g
+    command: ["mongod", "--wiredTigerCacheSizeGB", "1"]
+    volumes:
+      - mongodata:/data/db
+
+  neo4j:
+    image: neo4j:5
+    environment:
+      NEO4J_AUTH: neo4j/password123
+      NEO4J_server_memory_heap_max__size: 1G
+      NEO4J_server_memory_pagecache_size: 512M
+    ports:
+      - "127.0.0.1:57474:7474"   # браузер
+      - "127.0.0.1:57687:7687"   # bolt
+    cpus: 2
+    mem_limit: 2g
+    volumes:
+      - neo4jdata:/data
+
+volumes:
+  pgdata:
+  mongodata:
+  neo4jdata:
